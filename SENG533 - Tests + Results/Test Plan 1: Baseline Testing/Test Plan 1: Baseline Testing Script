@@ -1,0 +1,31 @@
+import { sleep } from 'k6'
+import http from 'k6/http'
+
+export const options = {
+  ext: {
+    loadimpact: {
+      distribution: { 'amazon:us:ashburn': { loadZone: 'amazon:us:ashburn', percent: 100 } },
+      apm: [],
+    },
+  },
+  thresholds: {},
+  scenarios: {
+    Baseline_Testing: {
+      executor: 'constant-vus',
+      gracefulStop: '30s',
+      duration: '5m',
+      vus: 1,
+      exec: 'baseline_Testing',
+    },
+  },
+}
+
+export function baseline_Testing() {
+  let response
+
+  // Test Plan 1: Baseline Testing
+  response = http.get('http://3.139.98.215:8080/tools.descartes.teastore.webui/')
+
+  // Automatically added sleep
+  sleep(1)
+}

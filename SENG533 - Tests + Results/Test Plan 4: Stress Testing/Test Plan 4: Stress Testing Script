@@ -1,0 +1,39 @@
+import { sleep } from 'k6'
+import http from 'k6/http'
+
+export const options = {
+  ext: {
+    loadimpact: {
+      distribution: { 'amazon:us:ashburn': { loadZone: 'amazon:us:ashburn', percent: 100 } },
+      apm: [],
+    },
+  },
+  thresholds: {},
+  scenarios: {
+    Test_Plan_4_Stress_Testing: {
+      executor: 'ramping-vus',
+      gracefulStop: '30s',
+      stages: [
+        { target: 20, duration: '1m' },
+        { target: 20, duration: '2m' },
+        { target: 50, duration: '1m' },
+        { target: 50, duration: '2m' },
+        { target: 100, duration: '1m' },
+        { target: 100, duration: '2m' },
+        { target: 0, duration: '1m' },
+      ],
+      gracefulRampDown: '30s',
+      exec: 'test_Plan_4_Stress_Testing',
+    },
+  },
+}
+
+export function test_Plan_4_Stress_Testing() {
+  let response
+
+  // Test Plan 4: Stress Testing
+  response = http.get('http://3.139.98.215:8080/tools.descartes.teastore.webui/')
+
+  // Automatically added sleep
+  sleep(1)
+}

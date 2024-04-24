@@ -1,0 +1,49 @@
+import { sleep } from 'k6'
+import http from 'k6/http'
+
+export const options = {
+  ext: {
+    loadimpact: {
+      distribution: { 'amazon:us:ashburn': { loadZone: 'amazon:us:ashburn', percent: 100 } },
+      apm: [],
+    },
+  },
+  thresholds: {},
+  scenarios: {
+    Test_Plan_3_Spike_Testing: {
+      executor: 'ramping-vus',
+      gracefulStop: '30s',
+      stages: [
+        { target: 0, duration: '15s' },
+        { target: 25, duration: '0s' },
+        { target: 25, duration: '15s' },
+        { target: 0, duration: '0s' },
+        { target: 0, duration: '15s' },
+        { target: 50, duration: '0s' },
+        { target: 50, duration: '15s' },
+        { target: 0, duration: '0s' },
+        { target: 0, duration: '15s' },
+        { target: 75, duration: '0s' },
+        { target: 75, duration: '15s' },
+        { target: 0, duration: '0s' },
+        { target: 0, duration: '15s' },
+        { target: 100, duration: '0s' },
+        { target: 100, duration: '15s' },
+        { target: 0, duration: '0s' },
+        { target: 0, duration: '15s' },
+      ],
+      gracefulRampDown: '30s',
+      exec: 'test_Plan_3_Spike_Testing',
+    },
+  },
+}
+
+export function test_Plan_3_Spike_Testing() {
+  let response
+
+  // Test Plan 3: Spike Testing
+  response = http.get('http://3.139.98.215:8080/tools.descartes.teastore.webui/')
+
+  // Automatically added sleep
+  sleep(1)
+}
